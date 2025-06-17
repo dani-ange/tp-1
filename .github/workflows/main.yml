@@ -48,6 +48,7 @@ jobs:
        SMTP_PORT : ${{secrets.SMTP_PORT}}
        EMAIL_SENDER: ${{secrets.EMAIL_SENDER}}
        EMAIL_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+       EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
       run: python script/send_email.py
 
   
