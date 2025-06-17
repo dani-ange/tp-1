@@ -20,6 +20,8 @@ jobs:
        pip install -r  script/requirements.txt
     - name: python list
       run: pip list
+    - name: Check sklearn installation
+      run: python -c "import sklearn; print('✅ sklearn version:', sklearn.__version__)"
     - name: train the model
       run:
        python script/training.py
