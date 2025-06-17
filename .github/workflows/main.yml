@@ -23,7 +23,7 @@ jobs:
         mkdir -p doc
         python -m pydoc -w script/training.py
         python -m pydoc -w script/evaluation.py
-        mv script.training.html  script.evaluation.html doc/
+        mv training.html  evaluation.html doc/
 
     - name: python list
       run: pip list
