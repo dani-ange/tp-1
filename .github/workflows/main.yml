@@ -1,41 +1,41 @@
 name: tp-1
 on:
- push:
-  branches : dani
- workflow_dispatch:
+  push:
+    branches: [dani]
+  workflow_dispatch:
 
 jobs:
   train-and-evaluate:
-   runs-on: ubuntu-latest
-   steps:
-    - name: checkout repo
-      uses: actions/checkout@v3
-    - name: set-up-python
-      uses: actions/setup-python@v4
-      with:
-       python-version: "3.10"
-    - name: install dependences
-      run: |
-       python -m pip install --upgrade pip
-       python -m pip install -r  script/requirements.txt
-    - name: generate doc
-      run: |
-        mkdir -p doc
-        pydoc -w script/training.py
-        pydoc -w script/evaluation.py
-        mv training.html  evaluation.html doc/
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
 
-    - name: python list
-      run: pip list
-    - name: Check sklearn installation
-      run: python -c "import sklearn; print('✅ sklearn version:', sklearn.__version__)"
-    - name: train the model
-      run:
-       python script/training.py
+      - name: set-up-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: evaluate the model
-      run:
-       python script/evaluation.py
-  
+      - name: install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r script/requirements.txt
 
+      - name: generate docs
+        run: |
+          mkdir -p doc
+          python -m pydoc -w script.training
+          python -m pydoc -w script.evaluation
+          mv training.html evaluation.html doc/
 
+      - name: list installed packages
+        run: pip list
+
+      - name: check sklearn installation
+        run: python -c "import sklearn; print('✅ sklearn version:', sklearn.__version__)"
+
+      - name: train the model
+        run: python script/training.py
+
+      - name: evaluate the model
+        run: python script/evaluation.py
