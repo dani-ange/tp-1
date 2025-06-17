@@ -32,8 +32,8 @@ jobs:
     - name: generate doc
       run: |
         mkdir -p doc
-        pydoc -w script/training.py
-        pydoc -w script/evaluation.py
+        pydoc -w script/training
+        pydoc -w script/evaluation
         mv train.html  evaluate.html doc/
 
 
