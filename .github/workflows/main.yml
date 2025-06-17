@@ -18,6 +18,13 @@ jobs:
       run: |
        python -m pip install --upgrade pip
        pip install -r  script/requirements.txt
+    - name: generate doc
+      run: |
+        mkdir -p doc
+        pydoc -w script/training
+        pydoc -w script/evaluation
+        mv train.html  evaluate.html doc/
+
     - name: python list
       run: pip list
     - name: Check sklearn installation
@@ -29,12 +36,6 @@ jobs:
     - name: evaluate the model
       run:
        python script/evaluation.py
-    - name: generate doc
-      run: |
-        mkdir -p doc
-        pydoc -w script/training.py
-        pydoc -w script/evaluation.py
-        mv train.html  evaluate.html doc/
-
+  
 
 
