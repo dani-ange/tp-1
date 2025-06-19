@@ -52,6 +52,9 @@ jobs:
           echo "⚠️ Metrics below threshold, email will NOT be sent."
         fi
     - name: deploy model
+      env:
+        HF_TOKEN: ${{secrets.HF_TOKEN}}
+        THRESHOLD_SCORE: ${{secrets.THRESHOLD_SCORE}}
       if: ${{ steps.metrics.outputs.accuracy >= 0.85 || steps.metrics.outputs.f1 >= 0.85 }}
       run: python script/deploy.py
     - name: create zip model + docs
@@ -67,6 +70,7 @@ jobs:
        EMAIL_SENDER: ${{secrets.EMAIL_SENDER}}
        EMAIL_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
        EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+       
       run: python script/send_email.py
 
   
