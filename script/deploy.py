@@ -41,11 +41,11 @@ if accuracy >= THRESHOLD and f1 >= THRESHOLD:
 
     # --- Copy model files ---
     # Copies trained model files into the local repo.
-    dest = os.path.join(repo_dir, "distilbert-sentiment")
+    dest = os.path.join(repo_dir, "mnist_model")
     if os.path.exists(dest):
         rmtree(dest)
 
-    copytree("./models/distilbert-sentiment", dest)
+    copytree("./model/mnist_model.joblib", dest)
 
     # --- Git config ---
     # Set global Git identity (required for automated commits).
