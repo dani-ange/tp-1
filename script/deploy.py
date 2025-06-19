@@ -45,7 +45,7 @@ if accuracy >= THRESHOLD and f1 >= THRESHOLD:
     if os.path.exists(dest):
         rmtree(dest)
 
-    copytree("./model/mnist_model.joblib", dest)
+    copytree("./model", dest)
 
     # --- Git config ---
     # Set global Git identity (required for automated commits).
