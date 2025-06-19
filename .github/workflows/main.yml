@@ -36,6 +36,24 @@ jobs:
     - name: evaluate the model
       run:
        python script/evaluation.py
+    - name: Read evaluation metrics
+      id: metrics
+      run: |
+        sudo apt-get install -y jq
+        accuracy=$(jq '.accuracy' results.json)
+        f1=$(jq '.f1_score' results.json)
+        echo "accuracy=$accuracy" >> $GITHUB_OUTPUT
+        echo "f1=$f1" >> $GITHUB_OUTPUT
+    - name: Notify if email will be sent
+      run: |
+        if (( $(echo "${{ steps.metrics.outputs.accuracy }} >= 0.85" | bc -l) )) || (( $(echo "${{ steps.metrics.outputs.f1 }} >= 0.85" | bc -l) )); then
+          echo "✅ Metrics passed threshold, email will be sent."
+        else
+          echo "⚠️ Metrics below threshold, email will NOT be sent."
+        fi
+    - name: deploy model
+      if: ${{ steps.metrics.outputs.accuracy >= 0.85 || steps.metrics.outputs.f1 >= 0.85 }}
+      run: python script/deploy.py
     - name: create zip model + docs
       run: |
        zip -r bundle.zip model/ doc/

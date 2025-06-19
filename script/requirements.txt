@@ -2,3 +2,4 @@ scikit-learn
 joblib
 matplotlib
 pandas
+huggingface_hub
