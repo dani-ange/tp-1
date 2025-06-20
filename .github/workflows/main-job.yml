@@ -1,0 +1,91 @@
+name : manu jobs
+on:
+ push:
+  branches: dani
+ workflow_dispatch:
+jobs:
+ install dependences:
+  runs-on: ubuntu-latest
+  steps:
+   - name: environment setup
+     uses: actions/checkout@v3
+   - name: python setup
+     uses: actions/setup-python@v4
+     with : 
+      python-version: "3.10"
+   - name: requiremnts install
+     run: python -m pip install -r  script/requirements.txt
+ training:
+  needs: install dependences
+  runs-on: ubuntu-latest
+  steps:
+   - name: training
+     run: python script/training.py
+ evaluating:
+  needs: training
+  runs-on: ubuntu-latest
+  steps:
+   - name: evaluate
+     run: python script/evaluation.py
+ deploying:
+  needs: evaluating
+  runs-on: ubuntu-latest
+  steps:
+   - name: Read evaluation metrics
+     id: metrics
+     run: |
+        sudo apt-get install -y jq
+        accuracy=$(jq '.accuracy' results.json)
+        f1=$(jq '.f1_score' results.json)
+        echo "accuracy=$accuracy" >> $GITHUB_OUTPUT
+        echo "f1=$f1" >> $GITHUB_OUTPUT
+   - name: Notify if email will be sent
+     run: |
+        if (( $(echo "${{ steps.metrics.outputs.accuracy }} >= 0.85" | bc -l) )) || (( $(echo "${{ steps.metrics.outputs.f1 }} >= 0.85" | bc -l) )); then
+          echo "✅ Metrics passed threshold, MODEL will be deployed."
+        else
+          echo "⚠️ Metrics below threshold, MODEL will be deployed"
+        fi
+   - name: deploy
+     env:
+        HF_TOKEN: ${{secrets.HF_TOKEN}}
+        THRESHOLD_SCORE: ${{secrets.THRESHOLD_SCORE}}
+     if: ${{ steps.metrics.outputs.accuracy >= 0.85 || steps.metrics.outputs.f1 >= 0.85 }}
+     run: python script/deploy.py
+ generate-docs:
+  runs-on: ubuntu-latest
+  steps:
+   - name: generate doc
+     run: |
+        mkdir -p doc
+        python -m pydoc -w script/training.py
+        python -m pydoc -w script/evaluation.py
+        mv training.html  evaluation.html doc/
+ send-mail:
+  needs: deploying
+  runs-on: ubuntu-latest
+  steps:
+    - name: create zip model + docs
+      run: |
+       zip -r bundle.zip model/ doc/
+    - name: install email dependences
+      run: |
+       python -m pip install secure-smtplib
+    - name: send mail
+      env:
+       SMTP_SERVER: ${{secrets.SMTP_SERVER}}
+       SMTP_PORT : ${{secrets.SMTP_PORT}}
+       EMAIL_SENDER: ${{secrets.EMAIL_SENDER}}
+       EMAIL_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
+       EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
+       
+      run: python script/send_email.py
+
+   
+
+  
+
+
+
+ 
+ 
