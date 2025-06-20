@@ -4,7 +4,7 @@ on:
   branches: dani
  workflow_dispatch:
 jobs:
- install dependences:
+ install_dependences:
   runs-on: ubuntu-latest
   steps:
    - name: environment setup
@@ -16,7 +16,7 @@ jobs:
    - name: requiremnts install
      run: python -m pip install -r  script/requirements.txt
  training:
-  needs: install dependences
+  needs: install_dependences
   runs-on: ubuntu-latest
   steps:
    - name: training
