@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Training Log</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    pre { background: #f0f0f0; padding: 1rem; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Model Training Log</h1>
+  <pre id="log">Loading...</pre>
+  <script>
+    fetch('training_log.json')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('log').textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById('log').textContent = 'Error loading log: ' + err;
+      });
+  </script>
+</body>
+</html>
