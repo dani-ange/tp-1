@@ -17,20 +17,45 @@ jobs:
      run: python -m pip install -r  script/requirements.txt
  training:
   needs: install dependences
+  
   runs-on: ubuntu-latest
   steps:
+   - name: environment setup
+     uses: actions/checkout@v3
+   - name: python setup
+     uses: actions/setup-python@v4
+     with : 
+      python-version: "3.10"
+   - name: requiremnts install
+     run: python -m pip install -r  script/requirements.txt
    - name: training
      run: python script/training.py
  evaluating:
   needs: training
   runs-on: ubuntu-latest
   steps:
+   - name: environment setup
+     uses: actions/checkout@v3
+   - name: python setup
+     uses: actions/setup-python@v4
+     with : 
+      python-version: "3.10"
+   - name: requiremnts install
+     run: python -m pip install -r  script/requirements.txt
    - name: evaluate
      run: python script/evaluation.py
  deploying:
   needs: evaluating
   runs-on: ubuntu-latest
   steps:
+   - name: environment setup
+     uses: actions/checkout@v3
+   - name: python setup
+     uses: actions/setup-python@v4
+     with : 
+      python-version: "3.10"
+   - name: requiremnts install
+     run: python -m pip install -r  script/requirements.txt
    - name: Read evaluation metrics
      id: metrics
      run: |
@@ -55,6 +80,14 @@ jobs:
  generate-docs:
   runs-on: ubuntu-latest
   steps:
+   - name: environment setup
+     uses: actions/checkout@v3
+   - name: python setup
+     uses: actions/setup-python@v4
+     with : 
+      python-version: "3.10"
+   - name: requiremnts install
+     run: python -m pip install -r  script/requirements.txt
    - name: generate doc
      run: |
         mkdir -p doc
@@ -65,21 +98,29 @@ jobs:
   needs: deploying
   runs-on: ubuntu-latest
   steps:
-    - name: create zip model + docs
-      run: |
+   - name: environment setup
+     uses: actions/checkout@v3
+   - name: python setup
+     uses: actions/setup-python@v4
+     with : 
+      python-version: "3.10"
+   - name: requiremnts install
+     run: python -m pip install -r  script/requirements.txt
+   - name: create zip model + docs
+     run: |
        zip -r bundle.zip model/ doc/
-    - name: install email dependences
-      run: |
+   - name: install email dependences
+     run: |
        python -m pip install secure-smtplib
-    - name: send mail
-      env:
+   - name: send mail
+     env:
        SMTP_SERVER: ${{secrets.SMTP_SERVER}}
        SMTP_PORT : ${{secrets.SMTP_PORT}}
        EMAIL_SENDER: ${{secrets.EMAIL_SENDER}}
        EMAIL_RECEIVER: ${{secrets.EMAIL_RECEIVER}}
        EMAIL_PASSWORD: ${{secrets.EMAIL_PASSWORD}}
        
-      run: python script/send_email.py
+     run: python script/send_email.py
 
    
 
