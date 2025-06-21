@@ -3,6 +3,9 @@ on:
  push:
   branches: dani
  workflow_dispatch:
+permissions:
+ contents: write
+
 jobs:
  install_dependences:
   runs-on: ubuntu-latest
