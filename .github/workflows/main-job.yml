@@ -36,6 +36,7 @@ jobs:
      run: |
         git config user.name "dani-ange"
         git config user.email "danielledjofang2003@gmail.com"
+        git pull origin dani --rebase
         git add .
         git commit -m "📊 Auto-update training logs"
         git push
@@ -58,6 +59,8 @@ jobs:
      run: |
         git config user.name "dani-ange"
         git config user.email "danielledjofang2003@gmail.com"
+        git pull origin dani --rebase
+
         git add .
         git commit -m "📊 Auto-update training logs"
         git push
@@ -116,6 +119,8 @@ jobs:
      run: |
         git config user.name "dani-ange"
         git config user.email "danielledjofang2003@gmail.com"
+        git pull origin dani --rebase
+
         git add .
         git commit -m "📊 Auto-update training logs"
         git push
